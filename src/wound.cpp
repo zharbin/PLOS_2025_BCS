@@ -529,7 +529,7 @@ void evalWound(
         //------------------//
         // Instead of (double pressure = -k0*lamda_N*lamda_N;) directly, add volumetric part of stress SSvol
         // SSvol = 2dPsivol/dCC = 2dPsivol/dJe * dJe/dCC
-        double penalty = 0.33166988;
+        double penalty = 0.33166988; // k1; Value is modified for each patient based on breast density calculation. (0.33166988 represents a patient with 33% fibroglandular tissue).
         double Psivol = 0.5*phif*pow(penalty*(Je-1.),2) - 2*phif*k0*log(Je); //*phif
         double dPsivoldJe = phif*penalty*(Je-1.) - 2*phif*k0/Je;
         double dPsivoldJedJe = phif*penalty + 2*phif*k0/(Je*Je);
@@ -1297,7 +1297,7 @@ void evalFluxesSources(const std::vector<double> &global_parameters, const doubl
     // VOLUME STRESS
     //------------------//
     // Instead of (double pressure = -k0*lamda_N*lamda_N;) directly, add volumetric part of stress SSvol
-    double penalty = 0.33166988; // k1; This varies 
+    double penalty = 0.33166988; // k1; Value is modified for each patient based on breast density calculation. (0.33166988 represents a patient with 33% fibroglandular tissue).
     double Psivol = 0.5*phif*pow(penalty*(Je-1.),2) - 2*phif*k0*log(Je);
     double dPsivoldJe = phif*penalty*(Je-1.) - 2*phif*k0/Je;
     Matrix3d SSe_vol = dPsivoldJe*Je*CCeinv/2;
@@ -1545,7 +1545,7 @@ void evalSS(const std::vector<double> &global_parameters, double phif, Vector3d 
     SS_act = (Jp*traction_act*phif/(trA*(K_t*K_t+phif*phif)))*(kappa*Identity+(1-3*kappa)*a0a0);
     // total stress, don't forget the pressure
     // Instead of (double pressure = -k0*lamda_N*lamda_N;) directly, add volumetric part of stress SSvol
-    double penalty = 0.33166988;
+    double penalty = 0.33166988; // k1; Value is modified for each patient based on breast density calculation. (0.33166988 represents a patient with 33% fibroglandular tissue).
     double Psivol = 0.5*phif*pow(penalty*(Je-1.),2) - 2*phif*k0*log(Je);
     double dPsivoldJe = phif*penalty*(Je-1.) - 2*phif*k0/Je;
     double dPsivoldJedJe = phif*penalty + 2*k0/(Je*Je);
@@ -2585,7 +2585,7 @@ void evalWoundMechanics(double dt, double time, double time_final,
         //------------------//
         // Instead of (double pressure = -k0*lamda_N*lamda_N;) directly, add volumetric part of stress SSvol
         // SSvol = 2dPsivol/dCC = 2dPsivol/dJe * dJe/dCC
-        double penalty = 0.33166988;
+        double penalty = 0.33166988; // k1; Value is modified for each patient based on breast density calculation. (0.33166988 represents a patient with 33% fibroglandular tissue).
         double Psivol = 0.5*phif*pow(penalty*(Je-1.),2) - 2*phif*k0*log(Je); //*phif
         double dPsivoldJe = phif*penalty*(Je-1.) - 2*phif*k0/Je;
         double dPsivoldJedJe = phif*penalty + 2*phif*k0/(Je*Je);
