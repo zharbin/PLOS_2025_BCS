@@ -1297,7 +1297,7 @@ void evalFluxesSources(const std::vector<double> &global_parameters, const doubl
     // VOLUME STRESS
     //------------------//
     // Instead of (double pressure = -k0*lamda_N*lamda_N;) directly, add volumetric part of stress SSvol
-    double penalty = 0.33166988;
+    double penalty = 0.33166988; // k1; This varies 
     double Psivol = 0.5*phif*pow(penalty*(Je-1.),2) - 2*phif*k0*log(Je);
     double dPsivoldJe = phif*penalty*(Je-1.) - 2*phif*k0/Je;
     Matrix3d SSe_vol = dPsivoldJe*Je*CCeinv/2;
