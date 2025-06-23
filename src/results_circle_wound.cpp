@@ -46,14 +46,14 @@ int main(int argc, char *argv[])
 	double rho_phys = 1000*55.05126; // [cells/mm^3]
 	double c_max = 1.0e-4; // [g/mm3] from tgf beta review, 5e-5g/mm3 was good for tissues
 	//
-	double k0 = 0.00667792; // 0.0511; neo hookean for skin, used previously, in MPa
+	double k0 = 0.00667792; // neo hookean for skin, used previously, in MPa. Value is modified for each patient based on breast density calculation. (0.00667792 represents a patient with 33% fibroglandular tissue).
 	double kf = 0.015; // stiffness of collagen in MPa, from previous paper
 	double k2 = 0.048; // nonlinear exponential coefficient, non-dimensional
 	double t_rho = (1.28571E-5/55.05126); // 0.0045 force of fibroblasts in MPa, this is per cell. so, in an average sense this is the production by the natural density
 	double t_rho_c = (1.28571E-5*3.28571)/55.05126; // 0.045 force of myofibroblasts enhanced by chemical, I'm assuming normalized chemical, otherwise I'd have to add a normalizing constant
 	double K_t = 0.2; // Saturation of mechanical force by collagen
 	double K_t_c = c_max/10.; // saturation of chemical on force. this can be calculated from steady state
-	double D_rhorho = 0.0833; // 0.0833 diffusion of cells in [mm^2/hour], not normalized
+	double D_rhorho = 0.0833; // diffusion of cells in [mm^2/hour]; 0.0833 was used in Buganza et al. (2017) and Sohutskay et al. (2021), but the value is a placeholder and not implemented — actual value is defined in wound.cpp
 	double D_rhoc = 0; // diffusion of chemotactic gradient, an order of magnitude greater than random walk [mm^2/hour], not normalized
 	double D_cc = 0.01208; // 0.15 diffusion of chemical TGF, not normalized.
 	double p_rho = 0.04958333/55.05126; // in 1/hour production of fibroblasts naturally, proliferation rate, not normalized, based on data of doubling rate from commercial use
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 	std::vector<Vector3d> ip_lamda0(myMesh.n_elements*IP_size,lamda0_healthy);
 	//
     double tol_boundary = 1e-5;
-	// define wound domain
+	// define wound domain. Note: These values are unique for each patient.
 	double x_center = 103.5559;
 	double y_center = 23.6392;
 	double z_center = 15.5807;
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
 		double x_coord = myMesh.nodes[nodei](0);
 		double y_coord = myMesh.nodes[nodei](1);
 		double z_coord = myMesh.nodes[nodei](2);
-		// check if node is fixed
+		// check if node is fixed. Since tumor was in left breast, all nodes on the right breast are fixed (x_coord <= 0). All nodes past the chest wall are also fixed (y_coord >= 50)
 		if(myMesh.boundary_flag[nodei] == 1 || x_coord <= 0 || y_coord >= 50 + 8 ){ //   myMesh.boundary_flag[nodei]>1 && myMesh.boundary_flag[nodei]<6
 			// insert the boundary condition for displacement
 			std::cout<<"fixing node "<<nodei<<"\n";
