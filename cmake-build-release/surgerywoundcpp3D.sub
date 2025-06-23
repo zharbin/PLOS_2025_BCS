@@ -1,0 +1,12 @@
+#!/bin/bash
+# FILENAME:  surgerywoundcpp3D.sub
+#SBATCH -A abuganza
+#SBATCH --nodes=1
+#SBATCH --ntasks=24
+#SBATCH --time=336:00:00
+
+# Loads tools and sets the application up
+# Change to the directory
+
+export OMP_NUM_THREADS=24
+./surgerywoundcpp3D
